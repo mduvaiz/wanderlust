@@ -6,10 +6,10 @@ const Listing = require("../models/listings.js")
 
 
 const validateListing = (req,res,next)=>{
-        let {err} = listingSchema.validate(req.body);
-        console.log(err);
-        if (err) {
-        throw new ExpressErr(450, err.details[0].message);
+    let {error} = listingSchema.validate(req.body);
+    console.log(error);
+    if (error) {
+    throw new ExpressErr(400, error.details.map(detail => detail.message).join(", "));
        }else{
         next();
        }
@@ -33,6 +33,7 @@ router.post("/",validateListing,async (req,res,next)=>{
         // if(!req.body.listing){
         //     throw new ExpressErr(400,"Enter valid data!");
         // }
+        console.log("req.body.listing");
         const newListing = new Listing(req.body.listing);
         await newListing.save();
         req.flash("success","New Listing Created!");
@@ -53,9 +54,9 @@ router.get("/:id/edit",async (req,res)=>{
 });
 
 //Update route
-router.put("/:id", async(req,res)=>{
+router.put("/:id", validateListing, async(req,res)=>{
     let {id} = req.params;
-    await Listing.findByIdAndUpdate(id,{ ...req.body.listing});
+    await Listing.findByIdAndUpdate(id,{ ...req.body.listing},{ runValidators: true });
     res.redirect(`/listings/${id}`);
 });
 

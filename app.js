@@ -15,7 +15,7 @@ const flash = require("connect-flash");
 main().then(()=>{
     console.log("Mongoose connected");
 }).catch((err)=>{
-    console.log("err");
+    console.log(err);
 })
 async function main() {
     await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust")
@@ -74,23 +74,23 @@ app.use((err,req,res,next)=>{
 
     res.status(statusCode).render("error.ejs",{ message });
 });
-// app.use((err,req,res,next)=>{
-//     console.log(err);
-//     let statusCode = err.status || 500;
-//     let message = err.message || "Page not found";
-//     if (err.name === "CastError") {
-//     statusCode = 404;
-//     message = "please enter valid id";
-//   }else{
-//     statusCode = 500;    
-//     message = err.message;
-//   }
-//     res.status(statusCode).render("error.ejs",{message});
-// });
+app.use((err,req,res,next)=>{
+    console.log(err);
+    let statusCode = err.status || 500;
+    let message = err.message || "Page not found";
+    if (err.name === "CastError") {
+    statusCode = 404;
+    message = "please enter valid id";
+  }else{
+    statusCode = 500;    
+    message = err.message;
+  }
+    res.status(statusCode).render("error.ejs",{message});
+});
 
-// app.use((err,req,res,next)=>{
-//     res.send("Something went wrong!");
-// });
+app.use((err,req,res,next)=>{
+    res.send("Something went wrong!");
+});
 
 app.listen(8080,()=>{
     console.log("Server is istening");
