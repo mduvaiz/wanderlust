@@ -8,9 +8,10 @@ const reviewSchema = new Schema({
         min:1,
         max:5,
     },
+    // Date.now (not Date.now()) so Mongoose evaluates a new timestamp per document, not once at schema load.
     createdAt : {
         type: Date,
-        default: Date.now(),
+        default: Date.now,
     }
 });
 

@@ -17,3 +17,15 @@ module.exports.reviewSchema = Joi.object({
         comment: Joi.string().required(),
     }).required(),
 });
+
+// Auth payloads: strings only, unknown keys rejected. Email is normalized before later DB lookups.
+module.exports.signupSchema = Joi.object({
+    username: Joi.string().min(3).max(30).required(),
+    email: Joi.string().email().lowercase().trim().required(),
+    password: Joi.string().min(8).max(72).required(),
+}).unknown(false).strict();
+
+module.exports.loginSchema = Joi.object({
+    email: Joi.string().email().lowercase().trim().required(),
+    password: Joi.string().min(1).max(72).required(),
+}).unknown(false).strict();
