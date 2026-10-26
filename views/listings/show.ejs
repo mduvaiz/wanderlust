@@ -15,14 +15,19 @@
         &#8377;<%=listing.price.toLocaleString("en-IN")%><br/>
         <%=listing.location%><br/>
         <%=listing.country%><br/>
+        <% if (listing.owner && listing.owner.username) { %>
+    Owned by <%= listing.owner.username %><br/>
+<% } %>
     </p>
     </div>
     </div> 
     <div class="btns mb-3">
+        <% if (currentUserId && listing.owner && String(listing.owner._id) === currentUserId) { %>
         <a href="/listings/<%=listing._id%>/edit" class="btn btn-dark col-1 offset-2 edit-btn">Edit</a>
     <form method="POST" action="/listings/<%=listing._id%>?_method=DELETE">
         <button class="btn btn-dark offset-4 dlt-btn">DELETE</button>
     </form>
+        <% } %>
     </div>  
 <hr/>
     <div class="col-6 offset-2 mb-3">
@@ -46,12 +51,14 @@
     <%for(review of listing.reviews){%>
         <div class="card col-6 mb-3 show-cards" style="padding: 0.5rem;">
             <div class="card-body">
-                <h5 class="card-title">Jane Doe</h5>
+                <h5 class="card-title"><%= review.author && review.author.username ? review.author.username : "Unknown" %></h5>
                 <p class="card-text"><%=review.comment%></p>
                 <p class="card-text"><%=review.rating%> Stars</p>
+                <% if (currentUserId && review.author && String(review.author._id) === currentUserId) { %>
                 <form action="/listings/<%=listing._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST">
             <button class="btn btn-sm btn-dark">DELETE</button>
         </form>
+                <% } %>
             </div>
         </div>
     <%}%>

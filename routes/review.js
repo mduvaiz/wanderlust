@@ -4,22 +4,26 @@ const ExpressErr = require("../util/ExpressErr.js");
 const{reviewSchema} = require("../schema.js")
 const Review = require("../models/review.js");
 const Listing = require("../models/listings.js")
+const { isLoggedIn, isReviewAuthor } = require("../middleware/auth.js");
 
 
 const validateReview = (req,res,next)=>{
         let {error} = reviewSchema.validate(req.body);
         console.log(error);
+        // 400 is the correct client-error status for failed Joi validation (450 is not a valid HTTP status).
         if (error) {
-        throw new ExpressErr(450, error.details[0].message);
+        throw new ExpressErr(400, error.details[0].message);
        }else{
         next();
        }
 }
 //Reviews
 //POST Route
-router.post("/", validateReview,async (req,res)=>{
+router.post("/", isLoggedIn, validateReview, async (req,res)=>{
     let listing = await Listing.findById(req.params.id);
-    let newReview = new Review(req.body.review);
+    const { rating, comment } = req.body.review;
+    let newReview = new Review({ rating, comment });
+    newReview.author = req.session.userId;
     listing.reviews.push(newReview);
 
     await newReview.save();
@@ -28,11 +32,12 @@ router.post("/", validateReview,async (req,res)=>{
     console.log("Review was saved!");
     res.redirect(`/listings/${listing._id}`);
 });
-//Delete review route
-router.delete("/:reviewId",async(req,res)=>{
+// Delete review: $pull removes the ref from the listing; redirect so the request actually finishes.
+router.delete("/:reviewId", isLoggedIn, isReviewAuthor, async(req,res)=>{
     let {id,reviewId} = req.params;
-    await Listing.findByIdAndUpdate(id,{pull: {reviews: reviewId}})
-    await Review.findByIdAndDelete(reviewId); 
+    await Listing.findByIdAndUpdate(id,{$pull: {reviews: reviewId}})
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/listings/${id}`);
 })
 
 module.exports = router;

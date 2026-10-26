@@ -1,3 +1,6 @@
+// Load env first so this seed script can use MONGO_URL without a hardcoded URI.
+require("dotenv").config();
+
 const mongoose = require("mongoose");
 const initData = require("./data.js");
 const Listing = require("../models/listings.js");
@@ -8,7 +11,8 @@ main().then(()=>{
     console.log("err");
 })
 async function main() {
-    await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust")
+    // Use MONGO_URL from env instead of a hardcoded local URI.
+    await mongoose.connect(process.env.MONGO_URL)
 }
 
 const initDB = async()=>{
