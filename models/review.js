@@ -3,6 +3,10 @@ const Schema = mongoose.Schema;
 
 const reviewSchema = new Schema({
     comment: String,
+    author: {
+    type: Schema.Types.ObjectId,
+    ref: "User"
+},
     rating : {
         type: Number,
         min:1,
@@ -13,6 +17,7 @@ const reviewSchema = new Schema({
         type: Date,
         default: Date.now,
     }
+    
 });
 
 module.exports = mongoose.model("Review", reviewSchema);

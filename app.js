@@ -21,6 +21,7 @@ const reviews = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 const session = require("express-session");
 const flash = require("connect-flash");
+const { helmetMiddleware, loginLimiter, signupLimiter } = require("./middleware/security.js");
 
 main().then(()=>{
     console.log("Mongoose connected");
@@ -32,6 +33,7 @@ async function main() {
     await mongoose.connect(process.env.MONGO_URL)
 }
 
+app.use(helmetMiddleware);
 app.use(express.static(path.join(__dirname,"/public")));
 app.engine("ejs",ejsMate);
 app.set("view engine", "ejs");
@@ -46,8 +48,9 @@ const sessionOptions = {
     secret : process.env.SESSION_SECRET,
     resave : false,
     saveUninitialized : false,
+    name: "wl.sid",
     cookie : {
-        maxAge : 7 * 24 * 60 * 60 * 1000,
+        maxAge : 1000 * 60 * 60 * 24 * 7,
         httpOnly : true,
         sameSite : "lax",
         secure : process.env.NODE_ENV === "production",
@@ -58,15 +61,22 @@ app.use(session(sessionOptions));
 app.use(flash());
 app.use((req,res,next)=>{
     res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
     // Expose session user id to all views so the navbar can switch Login/Signup vs Logout.
     res.locals.currentUserId = req.session.userId || null;
     next(); 
 })
+app.use((req, res, next) => {
+    res.locals.currentUserId = req.session.userId || null;
+    next();
+});
 app.get("/",(req,res)=>{
     res.send("Home site is working!");
 });
 
 
+app.post("/login", loginLimiter);
+app.post("/signup", signupLimiter);
 app.use("/", userRouter);
 app.use("/listings",listings);
 app.use("/listings/:id/reviews/",reviews);
@@ -80,7 +90,7 @@ app.use((req, res) => {
 app.use((err,req,res,next)=>{
     console.error(err);
 
-    let statusCode = err.status || 500;
+    let statusCode = err.statusCode || err.status || 500;
     let message = err.message || "Something went wrong";
 
     if (err.name === "CastError") {

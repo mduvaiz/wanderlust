@@ -6,6 +6,7 @@ router.get("/signup", (req, res) => {
 });
 
 router.get("/login", (req, res) => {
+    console.log("DBG: GET /login", req.session.returnTo);
     res.render("users/login.ejs");
 });
 
@@ -54,7 +55,7 @@ router.post("/signup", async (req, res) => {
   res.redirect("/listings");
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", async (req, res, next) => {
   const { error, value } = loginSchema.validate(req.body);
   if (error) {
     req.flash("error", "Invalid email or password.");
@@ -70,16 +71,25 @@ router.post("/login", async (req, res) => {
     return res.redirect("/login");
   }
 
-  const returnTo = safeReturnTo(req.session.returnTo); // read BEFORE regenerate wipes it
-  await startSession(req, user._id);
-  req.flash("success", "Welcome back!");
-  res.redirect(returnTo || "/listings");
+  const returnTo = req.session.returnTo;
+  console.log("DBG: POST /login before regenerate", returnTo);
+  req.session.regenerate((err) => {
+      if (err) return next(err);
+      req.session.userId = user._id.toString();
+      if (returnTo) req.session.returnTo = returnTo;
+      req.session.save((err) => {
+          if (err) return next(err);
+          req.flash("success", "Welcome back!");
+          console.log("DBG: POST /login redirect", returnTo || "/listings");
+          res.redirect(returnTo || "/listings");
+      });
+  });
 });
 
 router.post("/logout", (req, res, next) => {
   req.session.destroy((err) => {
     if (err) return next(err);
-    res.clearCookie("connect.sid");
+    res.clearCookie("wl.sid");
     res.redirect("/login");
   });
 });

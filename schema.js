@@ -18,14 +18,21 @@ module.exports.reviewSchema = Joi.object({
     }).required(),
 });
 
-// Auth payloads: strings only, unknown keys rejected. Email is normalized before later DB lookups.
+// Auth payloads: strings only, unknown keys rejected.
+// Do not use .strict() here — it disables convert, so trim/lowercase would not run.
+// Joi.validate() returns { error } (does not throw); route handlers flash and redirect.
 module.exports.signupSchema = Joi.object({
-    username: Joi.string().min(3).max(30).required(),
-    email: Joi.string().email().lowercase().trim().required(),
+    username: Joi.string()
+        .trim()
+        .min(3)
+        .max(30)
+        .pattern(/^[A-Za-z0-9_]+$/)
+        .required(),
+    email: Joi.string().trim().lowercase().email().required(),
     password: Joi.string().min(8).max(72).required(),
-}).unknown(false).strict();
+}).unknown(false);
 
 module.exports.loginSchema = Joi.object({
-    email: Joi.string().email().lowercase().trim().required(),
+    email: Joi.string().trim().lowercase().email().required(),
     password: Joi.string().min(1).max(72).required(),
-}).unknown(false).strict();
+}).unknown(false);
