@@ -4,6 +4,7 @@ const ExpressErr = require("../util/ExpressErr.js");
 const{reviewSchema} = require("../schema.js")
 const Review = require("../models/review.js");
 const Listing = require("../models/listings.js")
+const { isLoggedIn, isReviewAuthor } = require("../middleware/auth.js");
 
 
 const validateReview = (req,res,next)=>{
@@ -18,9 +19,10 @@ const validateReview = (req,res,next)=>{
 }
 //Reviews
 //POST Route
-router.post("/", validateReview,async (req,res)=>{
+router.post("/", isLoggedIn, validateReview, async (req,res)=>{
     let listing = await Listing.findById(req.params.id);
-    let newReview = new Review(req.body.review);
+    const { rating, comment } = req.body.review;
+    let newReview = new Review({ rating, comment });
     newReview.author = req.session.userId;
     listing.reviews.push(newReview);
 
@@ -31,7 +33,7 @@ router.post("/", validateReview,async (req,res)=>{
     res.redirect(`/listings/${listing._id}`);
 });
 // Delete review: $pull removes the ref from the listing; redirect so the request actually finishes.
-router.delete("/:reviewId",async(req,res)=>{
+router.delete("/:reviewId", isLoggedIn, isReviewAuthor, async(req,res)=>{
     let {id,reviewId} = req.params;
     await Listing.findByIdAndUpdate(id,{$pull: {reviews: reviewId}})
     await Review.findByIdAndDelete(reviewId);
