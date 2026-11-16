@@ -2,3 +2,5 @@ node_modules/
 .env
 WanderlustToken.txt
 WanderlustToken.txt
+.env.*
+!*.env.example
