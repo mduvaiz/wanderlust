@@ -1,0 +1,25 @@
+<% layout("/layouts/boilerplate") %>
+<% block("head").append('<link rel="stylesheet" href="/css/landing.css">') %>
+
+<section class="landing">
+    <div class="landing-hero">
+        <div class="landing-copy">
+            <h1 class="landing-title"><%= siteName %></h1>
+            <p class="landing-tagline">Find and book unique places to stay around the world.</p>
+            <div class="landing-actions">
+                <a class="landing-btn landing-btn-primary" href="/listings">Browse listings</a>
+                <a class="landing-btn landing-btn-secondary" href="/signup">Sign up</a>
+            </div>
+        </div>
+        <img
+            class="landing-image"
+            src="/images/landing.jpg"
+            alt="Scenic stay with a wide outdoor view"
+            width="1672"
+            height="940"
+        >
+    </div>
+    <footer class="landing-footer">
+        <p><%= siteName %> &copy; <%= new Date().getFullYear() %></p>
+    </footer>
+</section>

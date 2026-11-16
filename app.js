@@ -70,8 +70,8 @@ app.use((req, res, next) => {
     res.locals.currentUserId = req.session.userId || null;
     next();
 });
-app.get("/",(req,res)=>{
-    res.send("Home site is working!");
+app.get("/", (req, res) => {
+    res.status(200).render("landing", { siteName: "Wanderlust" });
 });
 
 
