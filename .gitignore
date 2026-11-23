@@ -1,6 +1,6 @@
 node_modules/
 .env
 WanderlustToken.txt
-WanderlustToken.txt
+atlas-credentials.env
 .env.*
 !*.env.example

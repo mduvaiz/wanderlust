@@ -10,6 +10,7 @@ for (const name of ["SESSION_SECRET", "MONGO_URL", "PORT"]) {
 
 const express = require("express");
 const app = express();
+app.set("trust proxy", 1);
 const mongoose = require("mongoose");
 const path = require("path");
 const methodOverrride = require("method-override");
@@ -20,6 +21,8 @@ const listings = require("./routes/listing.js");
 const reviews = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 const session = require("express-session");
+const connectMongo = require("connect-mongo");
+const MongoStore = connectMongo.create ? connectMongo : (connectMongo.MongoStore || connectMongo.default);
 const flash = require("connect-flash");
 const { helmetMiddleware, loginLimiter, signupLimiter } = require("./middleware/security.js");
 
@@ -43,8 +46,21 @@ app.use(express.json());
 app.use(methodOverrride("_method"));
 app.locals.layout = "/layouts/boilerplate";
 
+const store = MongoStore.create({
+    mongoUrl: process.env.MONGO_URL,
+    crypto: {
+        secret: process.env.SESSION_SECRET,
+    },
+    touchAfter: 24 * 3600,
+});
+
+store.on("error", (err) => {
+    console.log("ERROR in MONGO SESSION STORE", err);
+});
+
 // Session cookies: no empty sessions, maxAge-only expiry, CSRF-safer SameSite, HTTPS-only in production.
 const sessionOptions = {
+    store,
     secret : process.env.SESSION_SECRET,
     resave : false,
     saveUninitialized : false,
