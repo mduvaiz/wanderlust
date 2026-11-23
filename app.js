@@ -87,7 +87,16 @@ app.use((req, res, next) => {
     next();
 });
 app.get("/", (req, res) => {
-    res.status(200).render("landing", { siteName: "Wanderlust" });
+    const { DEMO_EMAIL, DEMO_PASSWORD } = process.env;
+    const isLoggedOut = !req.session.userId;
+    const hasDemo = Boolean(isLoggedOut && DEMO_EMAIL && DEMO_PASSWORD);
+
+    const renderData = { siteName: "Wanderlust" };
+    if (hasDemo) {
+        renderData.demoEmail = DEMO_EMAIL;
+        renderData.demoPassword = DEMO_PASSWORD;
+    }
+    res.status(200).render("landing", renderData);
 });
 
 

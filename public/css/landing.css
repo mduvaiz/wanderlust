@@ -67,6 +67,38 @@
     color: #222222;
 }
 
+.landing-btn-demo {
+    background-color: #ffffff;
+    color: #fe424d;
+    border: 1.5px solid #fe424d;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.landing-btn-demo:hover {
+    background-color: #fff2f3;
+    color: #e33640;
+    border-color: #e33640;
+}
+
+.landing-btn-demo i {
+    font-size: 0.95rem;
+}
+
+.landing-demo-note {
+    font-size: 0.85rem;
+    color: #717171;
+    margin-top: 0.65rem;
+    margin-bottom: 0;
+    line-height: 1.4;
+}
+
 .landing-image {
     width: 100%;
     height: auto;
@@ -114,6 +146,18 @@ body:has(.landing) .f-info {
 
     .landing-tagline {
         max-width: none;
+    }
+}
+
+@media (max-width: 576px) {
+    .landing-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .landing-btn {
+        text-align: center;
+        justify-content: center;
     }
 }
 

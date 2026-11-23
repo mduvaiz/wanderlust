@@ -6,15 +6,6 @@ router.get("/signup", (req, res) => {
 });
 
 router.get("/login", (req, res) => {
-    const { DEMO_EMAIL, DEMO_PASSWORD } = process.env;
-    if (DEMO_EMAIL && DEMO_PASSWORD) {
-        return res.render("users/login.ejs", {
-            demoEmail: DEMO_EMAIL,
-            demoPassword: DEMO_PASSWORD,
-            DEMO_EMAIL,
-            DEMO_PASSWORD,
-        });
-    }
     res.render("users/login.ejs");
 });
 

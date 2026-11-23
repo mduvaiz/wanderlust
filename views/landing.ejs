@@ -9,7 +9,29 @@
             <div class="landing-actions">
                 <a class="landing-btn landing-btn-primary" href="/listings">Browse listings</a>
                 <a class="landing-btn landing-btn-secondary" href="/signup">Sign up</a>
+                <% if (typeof demoEmail !== "undefined" && typeof demoPassword !== "undefined" && demoEmail && demoPassword) { %>
+                    <button type="button" class="landing-btn landing-btn-demo" id="demo-login-btn">
+                        <i class="fa-regular fa-compass"></i> Try Demo
+                    </button>
+                <% } %>
             </div>
+            <% if (typeof demoEmail !== "undefined" && typeof demoPassword !== "undefined" && demoEmail && demoPassword) { %>
+                <p class="landing-demo-note">Demo account: explore listings and reviews with 1 click.</p>
+                <form id="demo-login-form" method="POST" action="/login" style="display: none;">
+                    <input type="hidden" name="email" value="<%= demoEmail %>">
+                    <input type="hidden" name="password" id="demo-password-input">
+                </form>
+                <script>
+                    document.getElementById("demo-login-btn")?.addEventListener("click", function() {
+                        const form = document.getElementById("demo-login-form");
+                        const pwd = document.getElementById("demo-password-input");
+                        if (form && pwd) {
+                            pwd.value = <%- JSON.stringify(demoPassword).replace(/</g, '\\u003c') %>;
+                            form.submit();
+                        }
+                    });
+                </script>
+            <% } %>
         </div>
         <img
             class="landing-image"

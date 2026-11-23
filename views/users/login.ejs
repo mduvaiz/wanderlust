@@ -3,36 +3,6 @@
 <div class="row mt-3">
     <div class="col-8 offset-2">
         <h3>Log In</h3>
-        <% 
-            const hasDemoAccount = (typeof demoEmail !== "undefined" && typeof demoPassword !== "undefined" && demoEmail && demoPassword) ||
-                                   (typeof DEMO_EMAIL !== "undefined" && typeof DEMO_PASSWORD !== "undefined" && DEMO_EMAIL && DEMO_PASSWORD);
-            if (hasDemoAccount) {
-                const demoUserEmail = (typeof demoEmail !== "undefined" && demoEmail) || DEMO_EMAIL;
-                const demoUserPassword = (typeof demoPassword !== "undefined" && demoPassword) || DEMO_PASSWORD;
-        %>
-            <div class="mb-3">
-                <button type="button" class="btn btn-outline-dark" id="demo-login-btn">Try the demo account</button>
-                <p class="text-muted mt-1 mb-0">Demo account: you can add listings and reviews.</p>
-            </div>
-            <script>
-                document.getElementById("demo-login-btn")?.addEventListener("click", function() {
-                    const emailInput = document.getElementById("email");
-                    const passwordInput = document.getElementById("password");
-                    if (emailInput && passwordInput) {
-                        emailInput.value = <%- JSON.stringify(demoUserEmail).replace(/</g, '\\u003c') %>;
-                        passwordInput.value = <%- JSON.stringify(demoUserPassword).replace(/</g, '\\u003c') %>;
-                        const form = emailInput.form || document.querySelector("form.needs-validation");
-                        if (form) {
-                            if (typeof form.requestSubmit === "function") {
-                                form.requestSubmit();
-                            } else {
-                                form.submit();
-                            }
-                        }
-                    }
-                });
-            </script>
-        <% } %>
         <form method="POST" action="/login" novalidate class="needs-validation">
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
