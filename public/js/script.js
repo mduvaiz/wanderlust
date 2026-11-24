@@ -28,7 +28,7 @@
     html.setAttribute("data-bs-theme", theme);
     localStorage.setItem("wl-theme", theme);
     if (icon) {
-      icon.className = theme === "dark" ? "fa-regular fa-sun" : "fa-regular fa-moon";
+      icon.className = theme === "dark" ? "fa-solid fa-sun text-warning" : "fa-regular fa-moon";
     }
   }
 

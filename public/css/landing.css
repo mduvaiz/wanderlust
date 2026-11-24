@@ -16,7 +16,7 @@
 .landing-title {
     font-size: clamp(2.4rem, 5vw, 4rem);
     font-weight: 800;
-    color: #222222;
+    color: var(--bs-body-color);
     margin-bottom: 0.75rem;
     opacity: 0;
     animation: landing-fade-rise 0.7s ease forwards;
@@ -25,7 +25,7 @@
 .landing-tagline {
     font-size: 1.15rem;
     line-height: 1.6;
-    color: #4a4a4a;
+    color: var(--bs-secondary-color);
     max-width: 28rem;
     margin-bottom: 1.75rem;
     opacity: 0;
@@ -67,14 +67,14 @@
 }
 
 .landing-btn-secondary {
-    background-color: #ffffff;
-    color: #222222;
-    border: 1px solid #d4d4d4;
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+    border: 1px solid var(--bs-border-color);
 }
 
 .landing-btn-secondary:hover {
-    background-color: #f4f4f4;
-    color: #222222;
+    background-color: var(--bs-tertiary-bg);
+    color: var(--bs-body-color);
 }
 
 .landing-demo-container {
@@ -86,7 +86,7 @@
 }
 
 .landing-btn-demo {
-    background-color: #ffffff;
+    background-color: transparent;
     color: #fe424d;
     border: 1.5px solid #fe424d;
     cursor: pointer;
@@ -103,14 +103,14 @@
 }
 
 .landing-btn-demo:hover {
-    background-color: #fff2f3;
+    background-color: rgba(254, 66, 77, 0.1);
     color: #e33640;
     border-color: #e33640;
 }
 
 .landing-demo-note {
     font-size: 0.82rem;
-    color: #717171;
+    color: var(--bs-secondary-color);
     margin-top: 0.45rem;
     margin-bottom: 0;
     line-height: 1.4;
@@ -131,7 +131,7 @@
 .landing-footer {
     margin-top: 2.5rem;
     text-align: center;
-    color: #6b6b6b;
+    color: var(--bs-secondary-color);
     font-size: 0.95rem;
 }
 
