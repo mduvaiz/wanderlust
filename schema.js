@@ -30,9 +30,9 @@ module.exports.signupSchema = Joi.object({
         .required(),
     email: Joi.string().trim().lowercase().email().required(),
     password: Joi.string().min(8).max(72).required(),
-}).unknown(false);
+}).unknown(true);
 
 module.exports.loginSchema = Joi.object({
     email: Joi.string().trim().lowercase().email().required(),
     password: Joi.string().min(1).max(72).required(),
-}).unknown(false);
+}).unknown(true);
