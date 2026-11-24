@@ -16,7 +16,7 @@
       form.classList.add('was-validated')
     }, false)
   })
-})()
+})();
 
 // Day / Night toggle
 (function () {
