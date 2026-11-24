@@ -10,7 +10,10 @@
         <a class="nav-link" href="/listings">All Listings</a>
         <a class="nav-link" href="/listings/new">Add Listings</a>
       </div>
-      <div class="navbar-nav ms-auto">
+      <div class="navbar-nav ms-auto align-items-center">
+        <button id="theme-toggle" class="btn btn-link nav-link px-2" aria-label="Toggle dark mode" title="Toggle dark mode">
+          <i id="theme-icon" class="fa-regular fa-moon"></i>
+        </button>
         <% if (currentUserId) { %>
           <form method="POST" action="/logout">
             <button type="submit" class="nav-link btn btn-link">Logout</button>
