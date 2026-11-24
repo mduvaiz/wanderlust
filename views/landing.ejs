@@ -19,6 +19,7 @@
                     <form id="demo-login-form" method="POST" action="/login" style="display: none;">
                         <input type="hidden" name="email" value="<%= demoEmail %>">
                         <input type="hidden" name="password" id="demo-password-input">
+                        <input type="hidden" name="returnTo" value="/listings">
                     </form>
                     <script>
                         document.getElementById("demo-login-btn")?.addEventListener("click", function() {

@@ -70,15 +70,20 @@ router.post("/login", async (req, res, next) => {
     return res.redirect("/login");
   }
 
-  const returnTo = req.session.returnTo;
+  const sessionReturnTo = req.session.returnTo;
+  const bodyReturnTo = safeReturnTo(req.body.returnTo);
+  // bodyReturnTo (e.g. "/listings" from demo form) takes priority over session returnTo
+  const destination = bodyReturnTo || sessionReturnTo || "/listings";
+
   req.session.regenerate((err) => {
       if (err) return next(err);
       req.session.userId = user._id.toString();
-      if (returnTo) req.session.returnTo = returnTo;
+      // Only preserve session returnTo if body didn't override it
+      if (!bodyReturnTo && sessionReturnTo) req.session.returnTo = sessionReturnTo;
       req.session.save((err) => {
           if (err) return next(err);
           req.flash("success", "Welcome back!");
-          res.redirect(returnTo || "/listings");
+          res.redirect(destination);
       });
   });
 });
@@ -87,7 +92,7 @@ router.post("/logout", (req, res, next) => {
   req.session.destroy((err) => {
     if (err) return next(err);
     res.clearCookie("wl.sid");
-    res.redirect("/login");
+    res.redirect("/");
   });
 });
 

@@ -17,3 +17,14 @@
     }, false)
   })
 })()
+
+// Auto-dismiss Bootstrap alerts after 5 seconds
+const alerts = document.querySelectorAll('.alert');
+if (alerts.length) {
+  setTimeout(() => {
+    alerts.forEach(alert => {
+      const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+      if (bsAlert) bsAlert.close();
+    });
+  }, 5000);
+}
